@@ -1,0 +1,98 @@
+|-- .env.local
+|-- .gitignore
+|-- app
+    |-- action.tsx
+    |-- app.tsx
+    |-- globals.css
+    |-- layout.tsx
+    |-- page.tsx
+|-- components
+    |-- generated
+        |-- Article.tsx
+    |-- tambo
+        |-- base
+            |-- message
+                |-- content
+                    |-- message-content.tsx
+                |-- images
+                    |-- message-images.tsx
+                |-- index.tsx
+                |-- loading-indicator
+                    |-- message-loading-indicator.tsx
+                |-- rendered-component
+                    |-- rendered-component-canvas-button.tsx
+                    |-- rendered-component-content.tsx
+                    |-- rendered-component.tsx
+                |-- root
+                    |-- message-root-context.tsx
+                    |-- message-root.tsx
+            |-- reasoning-info
+                |-- content
+                    |-- reasoning-info-content.tsx
+                |-- index.tsx
+                |-- root
+                    |-- reasoning-info-context.tsx
+                    |-- reasoning-info-root.tsx
+                |-- status-text
+                    |-- reasoning-info-status-text.tsx
+                |-- steps
+                    |-- reasoning-info-steps.tsx
+                |-- trigger
+                    |-- reasoning-info-trigger.tsx
+            |-- toolcall-info
+                |-- content
+                    |-- toolcall-info-content.tsx
+                |-- index.tsx
+                |-- parameters
+                    |-- toolcall-info-parameters.tsx
+                |-- result
+                    |-- toolcall-info-result.tsx
+                |-- root
+                    |-- get-tool-call-request.ts
+                    |-- get-tool-status-message.ts
+                    |-- keyify-parameters.ts
+                    |-- toolcall-info-context.tsx
+                    |-- toolcall-info-root.tsx
+                |-- status-icon
+                    |-- toolcall-info-status-icon.tsx
+                |-- status-text
+                    |-- toolcall-info-status-text.tsx
+                |-- tool-name
+                    |-- toolcall-info-tool-name.tsx
+                |-- trigger
+                    |-- toolcall-info-trigger.tsx
+            |-- types
+                |-- component-render-or-children.ts
+            |-- use-render
+                |-- use-render.ts
+        |-- dictation-button.tsx
+        |-- elicitation-ui.tsx
+        |-- markdown-components.tsx
+        |-- mcp-components.tsx
+        |-- mcp-config-modal.tsx
+        |-- message-generation-stage.tsx
+        |-- message-input.tsx
+        |-- message-suggestions.tsx
+        |-- message-thread-collapsible.tsx
+        |-- message-thread-panel.tsx
+        |-- message.tsx
+        |-- scrollable-message-container.tsx
+        |-- suggestions-tooltip.tsx
+        |-- text-editor.tsx
+        |-- thread-content.tsx
+        |-- thread-dropdown.tsx
+        |-- thread-history.tsx
+    |-- TamboProviderWrapper.tsx
+|-- eslint.config.mjs
+|-- lib
+    |-- tambo.ts
+    |-- thread-hooks.ts
+    |-- utils.ts
+|-- next-env.d.ts
+|-- next.config.ts
+|-- package-lock.json
+|-- package.json
+|-- postcss.config.mjs
+|-- public
+|-- README.md
+|-- tsconfig.json
