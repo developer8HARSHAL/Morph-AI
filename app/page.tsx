@@ -9,7 +9,6 @@ export default function Home() {
   function contentClassify(text: string){
     console.log("User pasted:", text)
 
-    // temporary test classification
     if(text.includes("function") || text.includes("const")){
       console.log("Detected: CODE")
     } 
