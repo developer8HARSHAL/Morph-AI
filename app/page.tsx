@@ -29,22 +29,22 @@ function ContentGenerator() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#eeebeb] text-gray-900">
+    <div className="flex flex-col min-h-screen bg-[#f8f5f5] text-black">
       {/* HEADER */}
       <div className="w-full px-10 py-6">
-        <h1 className="text-3xl font-semibold">MORPH AI</h1>
+        <h1 className="text-3xl font-semibold text-cyan-900">MORPH AI</h1>
       </div>
 
-      <div className="flex-1 w-[95%] mx-auto rounded-3xl bg-white shadow-xl border p-8">
+      <div className="flex-1 w-full mx-auto bg-[#f8f5f5] shadow-xl  p-8">
         {!hasGenerated ? (
           /* CENTER INPUT MODE */
-          <div className="flex flex-col items-center justify-center h-[70vh]">
-            <h1 className="text-4xl font-semibold text-center mb-10">
+          <div className="flex flex-col items-center justify-center h-[70vh] ">
+            <h1 className="text-4xl font-bold font-sans text-center mb-12 text-cyan-950">
               Turn Content into Insight and Action
             </h1>
 
             <div className="flex flex-col items-center gap-5 w-full">
-              <div className="w-[650px] bg-[#f4f6fb] border rounded-3xl p-6">
+              <div className="w-[650px]  shadow-xl  rounded-xl p-6">
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -56,9 +56,9 @@ function ContentGenerator() {
               <button
                 onClick={handleGenerate}
                 disabled={loading}
-                className="px-6 py-2 bg-black text-white rounded-xl hover:bg-gray-800 disabled:opacity-50"
+                className="px-6 py-2 bg-cyan-800  text-white rounded-2xl hover:bg-cyan-900 disabled:opacity-50"
               >
-                {loading ? "Analyzing..." : "Generate"}
+                {loading ? "Analyzing your content ...." : "Unlock Insights"}
               </button>
             </div>
           </div>
@@ -66,7 +66,7 @@ function ContentGenerator() {
           /* SPLIT UI MODE */
           <div className="flex gap-6 h-[75vh]">
             {/* LEFT 30% */}
-            <div className="w-[30%] bg-[#f8f9fc] rounded-2xl border p-6 flex flex-col">
+            <div className="w-[30%] p-6 flex flex-col">
               <h2 className="text-sm font-semibold text-gray-500 mb-3">
                 Your Content
               </h2>

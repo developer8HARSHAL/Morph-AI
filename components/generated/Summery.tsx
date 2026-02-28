@@ -25,7 +25,7 @@ export default function Summary({
 }: Props) {
   return (
     <div className="w-full flex justify-center px-4 py-8">
-      <div className="w-full max-w-4xl bg-white border rounded-2xl shadow-lg p-6 space-y-6">
+      <div className="w-full max-w-4xl bg-white  rounded-2xl shadow-lg p-6 space-y-6">
         
         {/* Header */}
         <div className="flex justify-between items-start flex-wrap gap-3">
