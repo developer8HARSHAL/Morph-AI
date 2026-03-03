@@ -90,7 +90,7 @@ function ContentGenerator() {
             {/* Content */}
             <div className="relative z-10 space-y-6 max-w-lg">
 
-              <h1 className="text-cyan-900 text-sm font-semibold uppercase tracking-widest mb-6">
+              <h1 className="text-cyan-900 text-sm font-semibold uppercase tracking-widest mb-10">
                 What can you Morph?
               </h1>
 
@@ -103,7 +103,7 @@ function ContentGenerator() {
                 and restructure it for you.
               </p>
 
-              <div className="text-xl">
+              <div className="text-lg ">
                 {content.map((f)=>(
                   <ContentCard key={f.label}{...f}/>
 
