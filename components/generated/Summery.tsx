@@ -25,12 +25,11 @@ export default function Summary({
 }: Props) {
   return (
     <div className="w-full flex justify-center px-4 py-8">
-      <div className="w-full max-w-4xl bg-white  rounded-2xl shadow-lg p-6 space-y-6">
         
         {/* Header */}
         <div className="flex justify-between items-start flex-wrap gap-3">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold">{title}</h1>
+            <h1 className="text-xl md:text-2xl font-semibold text-black">{title}</h1>
             <p className="text-xs text-gray-500 mt-1">
               {readingTime} min read
             </p>
@@ -51,14 +50,14 @@ export default function Summary({
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
               Summary
             </h2>
-            <p className="text-sm leading-relaxed bg-gray-50 rounded-lg p-4">
+            <p className="text-sm leading-relaxed bg-gray-50 rounded-lg p-4 text-black">
               {summary || "No summary available."}
             </p>
           </div>
 
           {/* Key Points Section */}
           <div className="space-y-2">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide ">
               Key Points
             </h2>
 
@@ -67,7 +66,7 @@ export default function Summary({
                 {keyPoints.map((point, index) => (
                   <li
                     key={index}
-                    className="text-sm bg-amber-50 rounded-lg p-3 border"
+                    className="text-sm bg-amber-50 rounded-lg p-3 border text-black"
                   >
                     {point}
                   </li>
@@ -94,7 +93,6 @@ export default function Summary({
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 }
