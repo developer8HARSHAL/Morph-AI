@@ -150,9 +150,9 @@ function ContentGenerator() {
 
       ) : (
         /* ── SPLIT / RESULTS MODE ── */
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden ">
 
-          <div className="w-[30%] min-w-[200px] flex flex-col border-r border-gray-200 bg-gray-50 p-6">
+          <div className="w-[30%] min-w-[200px] flex flex-col border-r border-gray-200 bg-gray-100 p-6">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
               Your Content
             </h2>
@@ -170,7 +170,7 @@ function ContentGenerator() {
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col p-6 overflow-auto bg-white">
+          <div className="flex-1 flex flex-col p-6 overflow-auto ">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
               AI Insights
             </h2>
