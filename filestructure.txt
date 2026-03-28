@@ -10,11 +10,15 @@
     |-- layout.tsx
     |-- page.tsx
 |-- components
+    |-- blocks
+        |-- ChecklistBlock.tsx
+        |-- HighlightBlock.tsx
+        |-- KeyPointsBlock.tsx
+        |-- SummaryBlock.tsx
     |-- generated
-        |-- Flashcard.tsx
-        |-- Highlight.tsx
-        |-- Summery.tsx
-        |-- Timestamp.tsx
+        |-- Article.tsx
+        |-- Email.tsx
+        |-- Notes.tsx
     |-- tambo
         |-- AGENTS.md
         |-- dictation-button.tsx
