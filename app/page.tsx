@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useTamboThreadInput, useTamboThread } from "@tambo-ai/react";
 import Article from "@/components/generated/Article";
+import Code from "@/components/generated/Code";
 import { motion, AnimatePresence } from 'framer-motion'
 
 const ARTICLE_INTENTS = [
@@ -67,16 +68,25 @@ function IntentTabs({
           key={intent.id}
           onClick={() => onSelect(intent.id)}
           className={`
-            flex items-center gap-2 rounded-xl border font-medium transition-all duration-150
-            ${size === "sm" ? "px-3 py-2 text-xs" : "px-4 py-2.5 text-sm"}
-            ${selected === intent.id
-              ? "bg-cyan-800 text-white border-cyan-800 shadow-sm"
+    relative overflow-hidden
+    flex items-center gap-2 rounded-xl border font-medium transition-colors duration-150
+    ${size === "sm" ? "px-3 py-2 text-xs" : "px-4 py-2.5 text-sm"}
+    ${selected === intent.id
+              ? "text-white border-cyan-800"
               : "bg-gray-50 text-gray-600 border-gray-300 hover:border-cyan-300 hover:text-cyan-800"
             }
-          `}
+  `}
         >
-          <span className="text-base">{intent.icon}</span>
-          {intent.label}
+
+          {selected === intent.id && (
+            <motion.div
+              layoutId="active-tab-bg"
+              className="absolute inset-0 rounded-xl bg-cyan-800"
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            />
+          )}
+          <span className="relative z-10 text-base">{intent.icon}</span>
+          <span className="relative z-10">{intent.label}</span>
         </button>
       ))}
     </div>
@@ -93,7 +103,8 @@ function ContentGenerator() {
   const [error, setError] = useState<string | null>(null);
   const [selectedIntent, setSelectedIntent] = useState("summary");
   const [aiProps, setAiProps] = useState<Record<string, unknown> | null>(null);
-
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [ComponentToRender, setComponentToRender] = useState<React.ComponentType<any> | null>(null);
   useEffect(() => {
     const last = thread?.messages
       ?.filter((m) => m.role === "assistant" && m.renderedComponent)
@@ -102,15 +113,23 @@ function ContentGenerator() {
     if (!last) return;
 
     const element = last.renderedComponent as React.ReactElement<Record<string, unknown>>;
-    const articleProps = (element.props.children as React.ReactElement<Record<string, unknown>>).props;
+    const child = element.props.children as React.ReactElement<any>;
 
-    setAiProps(articleProps);
+    if (child && child.props && Object.keys(child.props).length > 0) {
+      setComponentToRender(() => child.type as React.ComponentType<any>);
+      setAiProps(child.props);
+    }
+    console.group("child.type:", child.type);
+console.group("child.props:", child.props);
+
   }, [thread?.messages]);
 
   async function handleGenerate() {
     if (!input.trim()) return;
     setLoading(true);
     setError(null);
+     setAiProps(null);              // ← add this
+    setComponentToRender(null); 
 
     try {
       // Content only — intent is never sent to AI
@@ -143,7 +162,7 @@ function ContentGenerator() {
           /* Landing / input mode */
           <motion.div
             key="landing"
-            className="flex flex-1 min-h-[calc(100vh-53px)]"
+            className="flex flex-col md:flex-row flex-1 min-h-[calc(100vh-53px)] overflow-hidden"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
@@ -221,46 +240,59 @@ function ContentGenerator() {
           </motion.div>
 
         ) : (
+
+
+
           /* Split / results mode */
           <motion.div
             key="split"
-            className="flex flex-1 overflow-hidden min-h-[calc(100vh-53px)]"
+            className="flex flex-col md:flex-row flex-1 overflow-hidden min-h-[calc(100vh-53px)]"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
           >
 
-            {/* Left — content + controls */}
-            <div className="w-[30%] min-w-[220px] flex flex-col border-r border-gray-200 bg-gray-100 p-6">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+
+            {/* Left panel — outer wrapper always visible */}
+            <div className="w-full md:w-[30%] md:min-w-[220px] flex flex-col border-r border-gray-200 bg-gray-100 p-6">
+
+              {/* Toggle — mobile only, always visible */}
+              <button
+                className="md:hidden flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3"
+                onClick={() => setPanelOpen(!panelOpen)}
+              >
+                <span>{panelOpen ? "▲" : "▼"}</span>
+                <span>Your Content</span>
+              </button>
+
+              {/* Desktop label */}
+              <h2 className="hidden md:block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
                 Your Content
               </h2>
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-transparent outline-none resize-none text-gray-700 text-sm leading-relaxed"
-              />
 
-              <div className="mt-4 space-y-2 ">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                  What do you need?
-                </p>
-                {/* Intent switching — pure state, zero AI calls */}
-                <IntentTabs
-                  selected={selectedIntent}
-                  onSelect={setSelectedIntent}
-                  size="sm"
+              {/* Collapsible content */}
+              <div className={`${panelOpen ? "flex" : "hidden"} md:flex flex-col flex-1`}>
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="flex-1 bg-transparent outline-none resize-none text-gray-700 text-sm leading-relaxed"
                 />
+                <div className="mt-4 space-y-2">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    What do you need?
+                  </p>
+                  <IntentTabs selected={selectedIntent} onSelect={setSelectedIntent} size="sm" />
+                </div>
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading}
+                  className="mt-3 px-4 py-2 bg-cyan-800 text-white text-sm font-medium rounded-xl hover:bg-cyan-900 transition-colors disabled:opacity-50"
+                >
+                  {loading ? "Analysing…" : "Re-Generate"}
+                </button>
               </div>
 
-              <button
-                onClick={handleGenerate}
-                disabled={loading}
-                className="mt-3 px-4 py-2 bg-cyan-800 text-white text-sm font-medium rounded-xl hover:bg-cyan-900 transition-colors disabled:opacity-50"
-              >
-                {loading ? "Analysing…" : "Re-Generate"}
-              </button>
             </div>
 
             {/* Right — AI result */}
@@ -269,18 +301,7 @@ function ContentGenerator() {
                 AI Insights
               </h2>
 
-              {/* Error state */}
-              {error && (
-                <div className="rounded-2xl border border-red-100 bg-red-50 p-4 mb-4">
-                  <p className="text-sm text-red-700">{error}</p>
-                  <button
-                    onClick={handleGenerate}
-                    className="mt-2 text-xs text-red-600 underline"
-                  >
-                    Try again
-                  </button>
-                </div>
-              )}
+
 
               {/* Error state */}
               {error && (
@@ -297,8 +318,8 @@ function ContentGenerator() {
 
               {/* Result OR empty state — never both */}
               {!loading && !error && (
-                aiProps
-                  ? <Article {...(aiProps as any)} intent={selectedIntent} />
+                ComponentToRender
+                  ? <ComponentToRender {...(aiProps as any)} intent={selectedIntent} />
                   : <div className="flex-1 flex items-center justify-center">
                     <p className="text-sm text-gray-400">Your insights will appear here.</p>
                   </div>

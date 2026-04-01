@@ -17,6 +17,7 @@
         |-- SummaryBlock.tsx
     |-- generated
         |-- Article.tsx
+        |-- Code.tsx
         |-- Email.tsx
         |-- Notes.tsx
     |-- tambo
