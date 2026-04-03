@@ -13,6 +13,13 @@ const ARTICLE_INTENTS = [
   { id: "full", label: "Full Brief", icon: "⊞" },
 ];
 
+const CODE_INTENTS = [
+  { id: "explain", label: "Description", icon: "◎" },
+  { id: "functions", label: "Functions", icon: "→" },
+  { id: "keypoints", label: "Keypoints", icon: "#" },
+  { id: "full", label: "Full Brief", icon: "⊞" },
+];
+
 function ContentCard({ label, desc }: { label: string; desc: string }) {
   return (
     <div className="bg-white/50 mb-2 rounded-xl p-2 space-y-1">
@@ -53,17 +60,19 @@ function LoadingSkeleton() {
 }
 
 function IntentTabs({
+  intents,
   selected,
   onSelect,
   size = "md",
 }: {
+  intents: { id: string; label: string; icon: string }[];
   selected: string;
   onSelect: (id: string) => void;
   size?: "sm" | "md";
 }) {
   return (
     <div className={`grid grid-cols-2 gap-2`}>
-      {ARTICLE_INTENTS.map((intent) => (
+      {intents.map((intent) => (
         <button
           key={intent.id}
           onClick={() => onSelect(intent.id)}
@@ -105,6 +114,30 @@ function ContentGenerator() {
   const [aiProps, setAiProps] = useState<Record<string, unknown> | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [ComponentToRender, setComponentToRender] = useState<React.ComponentType<any> | null>(null);
+  const [contentType, setContentType] = useState<"code" | "article">("article");
+
+
+  function detectContentType(text: string): "code" | "article" {
+    const codePatterns = [
+      /function\s+\w+\s*\(/,      // function declarations
+      /=>\s*{/,                    // arrow functions
+      /const|let|var\s+\w+\s*=/,  // variable declarations
+      /def\s+\w+\s*\(/,           // Python functions
+      /SELECT\s+.+FROM/i,         // SQL
+      /class\s+\w+/,              // class declarations
+      /import\s+.+from/,          // imports
+      /<\w+.*>/,                  // JSX/HTML tags
+    ];
+
+    const matches = codePatterns.filter(p => p.test(text)).length;
+    return matches >= 2 ? "code" : "article";
+  }
+
+  useEffect(() => {
+    setContentType(detectContentType(input));
+  }, [input]);
+
+
   useEffect(() => {
     const last = thread?.messages
       ?.filter((m) => m.role === "assistant" && m.renderedComponent)
@@ -119,8 +152,6 @@ function ContentGenerator() {
       setComponentToRender(() => child.type as React.ComponentType<any>);
       setAiProps(child.props);
     }
-    console.group("child.type:", child.type);
-console.group("child.props:", child.props);
 
   }, [thread?.messages]);
 
@@ -128,11 +159,10 @@ console.group("child.props:", child.props);
     if (!input.trim()) return;
     setLoading(true);
     setError(null);
-     setAiProps(null);              // ← add this
-    setComponentToRender(null); 
+    setAiProps(null);              
+    setComponentToRender(null);
 
     try {
-      // Content only — intent is never sent to AI
       const prompt = input.trim().slice(0, 3000);
       setValue(prompt);
       await new Promise((r) => setTimeout(r, 50));
@@ -224,7 +254,12 @@ console.group("child.props:", child.props);
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
                       What do you need?
                     </p>
-                    <IntentTabs selected={selectedIntent} onSelect={setSelectedIntent} />
+                    <IntentTabs
+                      intents={contentType === "code" ? CODE_INTENTS : ARTICLE_INTENTS}
+                      selected={selectedIntent}
+                      onSelect={setSelectedIntent}
+                      size="sm"
+                    />
                   </div>
                 )}
 
@@ -282,7 +317,12 @@ console.group("child.props:", child.props);
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
                     What do you need?
                   </p>
-                  <IntentTabs selected={selectedIntent} onSelect={setSelectedIntent} size="sm" />
+                  <IntentTabs
+                    intents={contentType === "code" ? CODE_INTENTS : ARTICLE_INTENTS}
+                    selected={selectedIntent}
+                    onSelect={setSelectedIntent}
+                    size="sm"
+                  />
                 </div>
                 <button
                   onClick={handleGenerate}
